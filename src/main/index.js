@@ -115,6 +115,9 @@ function createAppIcon() {
 }
 
 function createSettingsWindow() {
+  if (settingWindow) {
+    settingWindow.focus();
+  }
   const window = new BrowserWindow({
     width: 600,
     height: 400,

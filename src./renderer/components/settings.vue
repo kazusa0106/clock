@@ -1,62 +1,38 @@
 <template>
   <div class="wrapper">
     <div class="closeBtn BtnArea" @click="close"></div>
-    <div class="navigator BtnArea">
+    <div class="navigator">
       <ul class="BtnArea">
         <li v-for="(menu,index) in menuList" :key="index" @click="navigate(menu.path)">{{menu.name}}</li>
       </ul>
     </div>
     <div>
-      <SettingsPanel :path="path" />
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <script>
 import { remote } from "electron";
-const dialog = remote.dialog;
-
-import SettingsPanel from "./settings/SettingsPanel.vue";
 
 export default {
-  components: {
-    SettingsPanel
-  },
   data() {
     return {
       menuList: [
         {
-          name: "设置背景图片",
-          path: "setBackground"
+          path: "/backGrounds",
+          name: "设置背景图片"
         }
-      ],
-      path: ""
+      ]
     };
   },
   methods: {
+    navigate(path) {
+      this.$router.push(path);
+    },
     close() {
       remote.getCurrentWindow().close();
-    },
-    methods: {
-      navigate(path) {
-        this.path = path;
-      }
     }
-    // openImageFile() {
-    //   dialog.showOpenDialog(
-    //     {
-    //       title: "选择图片",
-    //       filters: [
-    //         { name: "Images", extensions: ["jpg", "png", "gif"] },
-    //         { name: "All Files", extensions: ["*"] }
-    //       ]
-    //     },
-    //     filePath => {
-    //       // console.log(filePath);
-    //       this.$;
-    //     }
-    //   );
-    // }
   }
 };
 </script>
@@ -67,29 +43,24 @@ export default {
   height: 100%;
   width: 100%;
   .navigator {
+    flex-shrink: 0;
     width: 150px;
-    color: white;
-    background-color: #333152;
-    overflow: hidden;
+    background-color: #373a5d;
     ul {
-      overflow: auto;
       li {
-        &:hover {
-          background-color: #46507b;
-        }
-        padding: 10px;
-        cursor: pointer;
+        color: white;
+        text-align: center;
         height: 20px;
         line-height: 20px;
+        padding: 10px;
+        cursor: pointer;
+        &:hover {
+          background-color: #6d77b9;
+        }
       }
     }
   }
 }
-
-.navigator {
-  text-align: center;
-}
-
 .closeBtn {
   cursor: pointer;
   position: absolute;

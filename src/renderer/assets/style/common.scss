@@ -6,8 +6,17 @@ body,html{
     overflow: hidden;    
     user-select: none;   
      -webkit-app-region:drag;
+     font-family: "微软雅黑"
 }
 
  .BtnArea{
     -webkit-app-region:no-drag;
+  }
+
+  ul{
+    margin: 0;
+    padding: 0;
+    li {
+      list-style: none;
+    }
   }
