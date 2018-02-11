@@ -6,7 +6,7 @@
         <li v-for="(menu,index) in menuList" :key="index" @click="navigate(menu.path)">{{menu.name}}</li>
       </ul>
     </div>
-    <div>
+    <div class="view">
       <router-view></router-view>
     </div>
   </div>
@@ -59,6 +59,9 @@ export default {
         }
       }
     }
+  }
+  .view {
+    flex: 1;
   }
 }
 .closeBtn {

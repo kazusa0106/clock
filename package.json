@@ -10,6 +10,8 @@
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "dependencies": {
+    "element-theme-chalk": "^2.1.0",
+    "element-ui": "^2.1.0",
     "source-map-support": "^0.5.3"
   },
   "devDependencies": {
