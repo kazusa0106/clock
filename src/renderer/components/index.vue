@@ -1,19 +1,22 @@
 <template>
   <div class="wrapper">
-    <div class="bkg" :style="style">
-      <!-- <div class="clock"></div> -->
+    <div class="bkg">
       <div class="modal">
         <Clock/>
       </div>
+      <img class="customImage" :src="bkgUrl" />
     </div>
   </div>
 </template>
 
 <script>
 import Clock from "./clock";
-const { remote } = require("electron");
+const { remote, ipcRenderer } = require("electron");
+import fs from "fs";
+import defaultImg from "../assets/img/001.png";
 
-const { Menu, MenuItem } = remote;
+const { Menu, MenuItem, nativeImage } = remote;
+const ipc = ipcRenderer;
 export default {
   components: {
     Clock
@@ -23,14 +26,29 @@ export default {
       bkgUrl: "001.png"
     };
   },
+  mounted() {
+    ipc.on("bkgChange", () => {
+      this.reloadBkg();
+    });
+    this.reloadBkg();
+  },
   computed: {
     style() {
       return {
-        // backgroundImage: "url('img/001.png')"
+        backgroundImage: `url('${this.bkgUrl}')`
       };
     }
   },
-  methods: {}
+  methods: {
+    reloadBkg() {
+      const path = `${remote.app.getPath("userData")}/clockBkg/bkg.png`;
+      if (!fs.existsSync(path)) {
+        this.bkgUrl = nativeImage.createFromBuffer(defaultImg).toDataURL();
+      } else {
+        this.bkgUrl = nativeImage.createFromPath(path).toDataURL();
+      }
+    }
+  }
 };
 </script>
 
@@ -40,7 +58,7 @@ export default {
   background-repeat: no-repeat;
   background-color: transparent;
   border-radius: 100px;
-  background-image: url("../assets/img/001.png");
+  // background-image: url("../assets/img/001.png");
   background-size: 200px 200px;
   overflow: hidden;
   .bkg {
@@ -51,10 +69,18 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: rgba(255, 255, 255, 0.3);
+      z-index: 999;
+    }
+    .customImage {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      opacity: 0.5;
+      border-radius: 100px;
     }
     height: 200px;
     width: 200px;
+    overflow: hidden;
     background-repeat: no-repeat;
     background-image: url("../assets/img/Clocks@2x.png");
     background-position: 50% 50%;

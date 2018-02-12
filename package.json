@@ -10,8 +10,11 @@
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null"
   },
   "dependencies": {
+    "cropperjs": "^1.2.2",
     "element-theme-chalk": "^2.1.0",
     "element-ui": "^2.1.0",
+    "expose-loader": "^0.7.4",
+    "jquery": "^3.3.1",
     "source-map-support": "^0.5.3"
   },
   "devDependencies": {

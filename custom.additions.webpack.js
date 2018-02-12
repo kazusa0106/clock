@@ -32,6 +32,11 @@ var webpackConfig = merge(webpackRenderer, {
             }
         }]
     },
+    resolve: {
+        alias: {
+            jquery: 'jQuery'
+        }
+    }
 });
 module.exports = webpackConfig;
 

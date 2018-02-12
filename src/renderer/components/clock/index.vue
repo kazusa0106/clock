@@ -1,6 +1,6 @@
 <template>
-    <div class="clock">
-        <!-- <div class="tag quarter" v-for="(q,index) in 4" :key="`${index}quarter`" :style="getRotate1(index)">
+  <div class="clock">
+    <!-- <div class="tag quarter" v-for="(q,index) in 4" :key="`${index}quarter`" :style="getRotate1(index)">
 
         </div>
         <div class="tag hour" v-for="(q,index) in 12" :key="`${index}hour`" v-if="index%3!==0" :style="getRotate2(index)">
@@ -9,8 +9,8 @@
         <div class="tag min" v-for="(q,index) in 60" :key="`${index}min`" v-if="index%5!==0" :style="getRotate3(index)">
 
         </div> -->
-        <Pointers/>
-    </div>
+    <Pointers/>
+  </div>
 </template>
 
 <script>
@@ -52,6 +52,7 @@ export default {
   height: 160px;
   width: 160px;
   position: relative;
+  z-index: 999;
   // background-color: rgba(255, 255, 255, 0.2);
   .tag {
     &.quarter {

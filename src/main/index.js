@@ -1,16 +1,20 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray } from 'electron'
+import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
 import path from 'path'
 import url from 'url';
+
+const ipc = ipcMain;
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 // Global reference to mainWindow
 // Necessary to prevent win from being garbage collected
-let mainWindow;
-let settingWindow;
+// let mainWindow;
+// let settingWindow;
 let tray = null;
+//存放所有的window
+const windowMap = {};
 
 function createMainWindow() {
   // Construct new BrowserWindow
@@ -21,7 +25,7 @@ function createMainWindow() {
     maximizable: false,
     resizable: false,
     skipTaskbar: true,
-    // transparent: true
+    transparent: true,
     backgroundColor: '#EEFFFFFF'
   });
 
@@ -46,7 +50,8 @@ function createMainWindow() {
   window.loadURL(pageurl)
 
   window.on('closed', () => {
-    mainWindow = null
+    windowMap.mainWindow = null;
+    app.quit();
   });
 
   window.webContents.on('devtools-opened', () => {
@@ -67,7 +72,7 @@ const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) 
 })
 
 if (isSecondInstance) {
-  app.quit()
+  app.quit();
 }
 
 
@@ -78,11 +83,11 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
 
-app.on('activate', () => {
-  // On macOS it is common to re-create a window
-  // even after all windows have been closed
-  if (mainWindow === null) mainWindow = createMainWindow()
-})
+// app.on('activate', () => {
+//   // On macOS it is common to re-create a window
+//   // even after all windows have been closed
+//   if (mainWindow === null) mainWindow = createMainWindow()
+// })
 
 
 function createAppIcon() {
@@ -95,7 +100,7 @@ function createAppIcon() {
         const contextMenu = Menu.buildFromTemplate([{
           label: '设置',
           click: function (item, focusedWindow) {
-            settingWindow = createSettingsWindow();
+            windowMap.settingWindow = createSettingsWindow();
           }
         },
         {
@@ -107,7 +112,7 @@ function createAppIcon() {
         ]);
         app.appIcon.setContextMenu(contextMenu);
         app.appIcon.on('click', (event, bounds) => {
-          mainWindow.show();
+          windowMap.mainWindow.show();
         });
       }
     }
@@ -115,8 +120,8 @@ function createAppIcon() {
 }
 
 function createSettingsWindow() {
-  if (settingWindow) {
-    settingWindow.focus();
+  if (windowMap.settingWindow) {
+    windowMap.settingWindow.focus();
   }
   const window = new BrowserWindow({
     width: 600,
@@ -133,9 +138,7 @@ function createSettingsWindow() {
     slashes: true
   });
 
-  // Set url for `win`
-  // points to `webpack-dev-server` in development
-  // points to `index.html` in production
+
   const pageurl = isDevelopment
     ? `http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}/settings.html`
     : productionIndexPath
@@ -147,12 +150,21 @@ function createSettingsWindow() {
   window.loadURL(pageurl)
 
   window.on('closed', () => {
-    settingWindow = null;
+    windowMap.settingWindow = null;
   });
   return window;
 }
-// Create main BrowserWindow when electron is ready
+
+function initEventBus() {
+  ipc.on("bus", (event, target, eventName, ...args) => {
+    const w = windowMap[target];
+    // consolw.logs(event, target, eventName, ...args);
+    w.webContents.send(eventName, ...args);
+  });
+}
+
 app.on('ready', () => {
-  mainWindow = createMainWindow();
+  windowMap.mainWindow = createMainWindow();
   createAppIcon();
+  initEventBus();
 });
