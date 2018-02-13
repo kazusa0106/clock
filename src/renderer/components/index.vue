@@ -32,18 +32,12 @@ export default {
     });
     this.reloadBkg();
   },
-  computed: {
-    style() {
-      return {
-        backgroundImage: `url('${this.bkgUrl}')`
-      };
-    }
-  },
   methods: {
     reloadBkg() {
       const path = `${remote.app.getPath("userData")}/clockBkg/bkg.png`;
       if (!fs.existsSync(path)) {
-        this.bkgUrl = nativeImage.createFromBuffer(defaultImg).toDataURL();
+        // this.bkgUrl = nativeImage.createFromBuffer(defaultImg).toDataURL();
+        this.bkgUrl = defaultImg;
       } else {
         this.bkgUrl = nativeImage.createFromPath(path).toDataURL();
       }
@@ -77,6 +71,7 @@ export default {
       top: 0px;
       opacity: 0.5;
       border-radius: 100px;
+      max-width: 100%;
     }
     height: 200px;
     width: 200px;

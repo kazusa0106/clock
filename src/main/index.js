@@ -25,7 +25,7 @@ function createMainWindow() {
     maximizable: false,
     resizable: false,
     skipTaskbar: true,
-    transparent: true,
+    // transparent: true,
     backgroundColor: '#EEFFFFFF'
   });
 
@@ -54,20 +54,20 @@ function createMainWindow() {
     app.quit();
   });
 
-  window.webContents.on('devtools-opened', () => {
-    window.focus()
-    setImmediate(() => {
-      window.focus()
-    })
-  })
+  // window.webContents.on('devtools-opened', () => {
+  //   window.focus()
+  //   setImmediate(() => {
+  //     window.focus()
+  //   })
+  // })
   return window
 }
 
 const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
   // Someone tried to run a second instance, we should focus our window.
-  if (myWindow) {
-    if (myWindow.isMinimized()) myWindow.restore()
-    myWindow.focus()
+  if (windowMap.mainWindow) {
+    if (windowMap.mainWindow.isMinimized()) windowMap.mainWindow.restore()
+    windowMap.mainWindow.focus()
   }
 })
 
@@ -80,7 +80,7 @@ if (isSecondInstance) {
 app.on('window-all-closed', () => {
   // On macOS it is common for applications to stay open
   // until the user explicitly quits
-  if (process.platform !== 'darwin') app.quit()
+  // if (process.platform !== 'darwin') app.quit()
 })
 
 // app.on('activate', () => {
@@ -97,18 +97,19 @@ function createAppIcon() {
       if (!error) {
         app.iconNormal = icon;
         app.appIcon = new Tray(icon);
-        const contextMenu = Menu.buildFromTemplate([{
-          label: '设置',
-          click: function (item, focusedWindow) {
-            windowMap.settingWindow = createSettingsWindow();
+        const contextMenu = Menu.buildFromTemplate([
+          {
+            label: '设置',
+            click: function (item, focusedWindow) {
+              windowMap.settingWindow = createSettingsWindow();
+            }
+          },
+          {
+            label: '退出',
+            click: function (item, focusedWindow) {
+              app.quit();
+            }
           }
-        },
-        {
-          label: '退出',
-          click: function (item, focusedWindow) {
-            app.quit();
-          }
-        }
         ]);
         app.appIcon.setContextMenu(contextMenu);
         app.appIcon.on('click', (event, bounds) => {
