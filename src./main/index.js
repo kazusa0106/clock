@@ -25,7 +25,7 @@ function createMainWindow() {
     maximizable: false,
     resizable: false,
     skipTaskbar: true,
-    // transparent: true,
+    transparent: true,
     backgroundColor: '#EEFFFFFF'
   });
 

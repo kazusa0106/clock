@@ -6,8 +6,8 @@
         <img id="img" class="bkgImg" :src="imgPath" v-if="imgPath!==''" />
       </div>
     </div>
-    <div class="BtnArea buttons">
-      <div class="btn" @click="save" v-if="imgPath!==''">保存</div>
+    <div class="buttons BtnArea">
+      <div class="btn BtnArea" @click="save" v-if="imgPath!==''">保存</div>
     </div>
   </div>
   </div>
@@ -54,7 +54,6 @@ export default {
         path => {
           this.dialogOpenTag = false;
           if (path) {
-            console.log(path[0]);
             this.imgPath = nativeImage.createFromPath(path[0]).toDataURL();
             this.$nextTick(() => {
               if (!this.mycropper) {
@@ -95,9 +94,20 @@ export default {
         file.write(nativeImage.createFromDataURL(this.res).toPNG());
         file.end();
       }
-      dialog.showMessageBox({
-        message: "保存成功"
-      });
+      remote.app.getFileIcon(
+        remote.app.getPath("exe"),
+        { size: "small" },
+        (error, icon) => {
+          if (!error) {
+            dialog.showMessageBox({
+              type: "none",
+              message: "保存成功",
+              icon
+            });
+          }
+        }
+      );
+
       ipc.send("bus", "mainWindow", "bkgChange");
     }
   }

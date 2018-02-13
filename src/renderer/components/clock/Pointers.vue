@@ -76,9 +76,9 @@ export default {
   }
   .hour {
     width: 100%;
-    height: 100%;
+    height: 60%;
     position: relative;
-    top: 0px;
+    top: 40%;
     border-radius: 100px;
     background: url("../../assets/img/Minutehand@2x.png");
   }
@@ -92,9 +92,9 @@ export default {
   }
   .second {
     width: 1px;
-    height: 90%;
+    height: 100%;
     position: relative;
-    top: 10%;
+    top: 0%;
     border-radius: 100px;
     background: #6b2626;
   }

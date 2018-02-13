@@ -32,5 +32,14 @@
     "renderer": {
       "webpackConfig": "custom.additions.webpack.js"
     }
+  },
+  "build": {
+    "appId": "myclock",
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "icon": "static/icon.ico"
+    }
   }
 }
