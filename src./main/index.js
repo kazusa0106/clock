@@ -1,12 +1,18 @@
 'use strict'
 
-import { app, BrowserWindow, Menu, Tray, ipcMain } from 'electron'
+import { app, BrowserWindow, Menu, Tray, ipcMain, Notification, screen } from 'electron'
+import { autoUpdater } from "electron-updater";
+
 import path from 'path'
 import url from 'url';
 
 const ipc = ipcMain;
 
+
 const isDevelopment = process.env.NODE_ENV !== 'production';
+
+autoUpdater.logger = require("electron-log");
+autoUpdater.logger.transports.file.level = "info";
 
 // Global reference to mainWindow
 // Necessary to prevent win from being garbage collected
@@ -18,6 +24,7 @@ const windowMap = {};
 
 function createMainWindow() {
   // Construct new BrowserWindow
+  const size = screen.getPrimaryDisplay().workAreaSize;
   const window = new BrowserWindow({
     width: 200,
     height: 200,
@@ -25,8 +32,11 @@ function createMainWindow() {
     maximizable: false,
     resizable: false,
     skipTaskbar: true,
-    transparent: true,
-    backgroundColor: '#EEFFFFFF'
+    // transparent: true,
+    x: size.width - 300,
+    y: size.height - 300,
+    backgroundColor: '#EEFFFFFF',
+    opacity: 0
   });
 
   // Path to index file in production environment
@@ -97,6 +107,7 @@ function createAppIcon() {
       if (!error) {
         app.iconNormal = icon;
         app.appIcon = new Tray(icon);
+
         const contextMenu = Menu.buildFromTemplate([
           {
             label: '设置',
@@ -168,4 +179,16 @@ app.on('ready', () => {
   windowMap.mainWindow = createMainWindow();
   createAppIcon();
   initEventBus();
+  autoUpdater.on("update-downloaded", info => {
+    autoUpdater.logger.info(`version:${info.version}`);
+    autoUpdater.logger.info(`eleaseDate:${info.releaseDate}`);
+    autoUpdater.logger.info(`releaseNotes:${info.releaseNotes}`);
+    autoUpdater.logger.info(`releaseName:${info.releaseName}`);
+    // windowMap.mainWindow.webContents.send("update-downloaded", info);
+  });
+
+  // autoUpdater.checkForUpdates();
+
 });
+
+

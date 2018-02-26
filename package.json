@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "cropperjs": "^1.2.2",
+    "electron-log": "^2.2.14",
+    "electron-updater": "^2.20.1",
     "element-theme-chalk": "^2.1.0",
     "element-ui": "^2.1.0",
     "expose-loader": "^0.7.4",
@@ -40,6 +42,13 @@
     },
     "win": {
       "icon": "static/icon.ico"
-    }
+    },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://10.15.245.111:9999",
+        "channel": "latest"
+      }
+    ]
   }
 }

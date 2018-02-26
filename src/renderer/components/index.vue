@@ -31,6 +31,14 @@ export default {
       this.reloadBkg();
     });
     this.reloadBkg();
+    // Notification.requestPermission().then(function(permission) {
+    //   if (permission === "granted") {
+    //     console.log("用户允许通知");
+    //     const notification = new Notification("abc", { body: 12321 });
+    //   } else if (permission === "denied") {
+    //     console.log("用户拒绝通知");
+    //   }
+    // });
   },
   methods: {
     reloadBkg() {
